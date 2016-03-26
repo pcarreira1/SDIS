@@ -5,8 +5,8 @@ import java.net.MulticastSocket;
 
 public class MulticastDataRestore extends MulticastChannel{
     
-    public MulticastDataRestore(String addr, int port, MulticastSocket socket) throws IOException {
-        super(addr, port, socket);
+    public MulticastDataRestore(String addr, int port) throws IOException {
+        super(addr, port);
     }
     
     public void SendChunk(int serverID, String FileID, int ChunkNo, Chunk chunkPiece){

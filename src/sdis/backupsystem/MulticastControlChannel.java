@@ -5,8 +5,8 @@ import java.net.MulticastSocket;
 
 public class MulticastControlChannel extends MulticastChannel{
 
-    public MulticastControlChannel(String addr, int port, MulticastSocket socket) throws IOException {
-        super(addr, port, socket);
+    public MulticastControlChannel(String addr, int port) throws IOException {
+        super(addr, port);
     }
     
     //needs arguments

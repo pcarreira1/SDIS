@@ -5,8 +5,8 @@ import java.net.MulticastSocket;
 
 public class MulticastDataBackup extends MulticastChannel{
     
-    public MulticastDataBackup(String addr, int port, MulticastSocket socket) throws IOException {
-        super(addr, port, socket);
+    public MulticastDataBackup(String addr, int port) throws IOException {
+        super(addr, port);
     }
     
     public void BackupRequest(int serverID, String FileID, int ChunkNo, int ReplicationDeg, Chunk chunkPiece){
