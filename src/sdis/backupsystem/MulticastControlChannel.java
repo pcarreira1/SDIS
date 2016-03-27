@@ -40,8 +40,8 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
         if (super.join()) {
             System.out.println("Socket connect "+addr+" - "+port);
             while(true){
-                String msg=super.receiveMessage();
-                System.out.println(msg);
+                Message msg=super.receiveMessage();
+                System.out.println(msg.getFullMessage());
             }
         }
     }

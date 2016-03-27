@@ -22,8 +22,8 @@ public class MulticastDataRestore extends MulticastChannel implements Runnable{
         if (super.join()) {
             System.out.println("Socket connect "+addr+" - "+port);
             while(true){
-                String msg=super.receiveMessage();
-                System.out.println(msg);
+                Message msg=super.receiveMessage();
+                System.out.println(msg.getFullMessage());
             }
         }
     }
