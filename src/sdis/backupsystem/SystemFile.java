@@ -49,8 +49,7 @@ public class SystemFile implements Serializable {
     public int getNumChunks() {
         return numChunks;
     }
-    
-    
+
     private String generateFileID(String name) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(name.getBytes(StandardCharsets.UTF_8));
@@ -65,5 +64,15 @@ public class SystemFile implements Serializable {
         }
         return sb.toString();
 
+    }
+
+    public byte[] cutDataForChunk(int ChunkNo) {
+        byte[] information;
+        if (ChunkNo != numChunks) {
+            information = Arrays.copyOfRange(data, (ChunkNo - 1) * 64000, (ChunkNo * 64000));
+        } else {
+            information = Arrays.copyOfRange(data, (ChunkNo - 1) * 64000, data.length);
+        }
+        return information;
     }
 }
