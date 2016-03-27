@@ -41,7 +41,7 @@ public class Message {
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
         this.replicationDeg = _replicationDeg;
-        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo+' '+replicationDeg+' '+"\r\n\r\n";
+        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo+' '+replicationDeg;
     }
     
      public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo) {
@@ -50,7 +50,7 @@ public class Message {
         this.senderID = _senderID;
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
-        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo+' '+"\r\n\r\n";
+        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo;
     }
 
     public void setBody(byte[] body) {
@@ -59,6 +59,37 @@ public class Message {
         
     public String getFullMessage(){
         String bodyString = Arrays.toString(body);
-        return header+bodyString;
+        return header+' '+"\r\n\r\n"+bodyString;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public int getSenderID() {
+        return senderID;
+    }
+
+    public String getFileID() {
+        return fileID;
+    }
+
+    public int getChunkNo() {
+        return chunkNo;
+    }
+
+    public int getReplicationDeg() {
+        return replicationDeg;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+    
+    
+    
 }

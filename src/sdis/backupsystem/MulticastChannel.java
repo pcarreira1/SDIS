@@ -11,10 +11,9 @@ import java.util.logging.Logger;
 
 public class MulticastChannel {
 
-//    private final static int PACKETSIZE = 64000;
+    private final static int PACKETSIZE = 200000;
     InetAddress addr;
     int port;
-    int PACKETSIZE = 100;
     MulticastSocket socket;
 
     public MulticastChannel(String addr, int port) {
