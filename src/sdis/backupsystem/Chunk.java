@@ -8,10 +8,9 @@ public class Chunk implements Serializable{
     private int chunkNo;
     private byte[] information;
 
-    public Chunk(String FileID, int chunkNo, byte[] information) {
+    public Chunk(String FileID, int chunkNo) {
         this.FileID = FileID;
         this.chunkNo = chunkNo;
-        this.information = information;
     }
 
     public int getChunkNo() {
