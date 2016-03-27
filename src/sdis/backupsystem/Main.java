@@ -5,6 +5,7 @@
  */
 package sdis.backupsystem;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -20,7 +21,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, FileNotFoundException, ClassNotFoundException {
         // Passar porta e addr por parâmetro
         //MulticastControlChannel mc=new MulticastControlChannel(args[0],Integer.parseInt(args[1]));
         
@@ -32,8 +33,11 @@ public class Main {
         thread.start();
         */
         
-        //SystemFile test = new SystemFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf");
-        
+        SystemFile test = new SystemFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf");
+        Database databaseTest = new Database();
+        //databaseTest.addFile(test);
+        //databaseTest.saveDatabase();
+        databaseTest.loadDatabase();
     }
     
 }

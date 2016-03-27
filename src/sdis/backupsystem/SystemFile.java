@@ -22,14 +22,14 @@ public class SystemFile implements Serializable {
     //Number of chunks this file will be devided in;
     private int numChunks;
 
-    private Path path;
+    private String path;
 
     private byte[] data;
 
     File file;
 
     public SystemFile(String _path) throws IOException, NoSuchAlgorithmException {
-        path = Paths.get(_path);
+        Path path = Paths.get(_path);
         file = new File(_path);
         float fileSize = file.length();
         float nChunks = fileSize / maxChunkSize;
