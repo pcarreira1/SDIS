@@ -12,9 +12,15 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable{
     }
     
     public void BackupRequest(int serverID, String FileID, int ChunkNo, int ReplicationDeg, Chunk chunkPiece){
-        Message msg = new Message(Message.MessageType.PUTCHUNK, "1.0", serverID, FileID, ChunkNo, ReplicationDeg);
-        msg.setBody(chunkPiece.getInformation());
-        sendMessage(msg.getFullMessage());
+         if (super.join()) {
+            Message msg = new Message(Message.MessageType.PUTCHUNK, "1.0", serverID, FileID, ChunkNo, ReplicationDeg);
+            msg.setBody(chunkPiece.getInformation());
+            sendMessage(msg.getFullMessage());
+        }
+    }
+    
+    public void joinSocket(){
+        super.join();
     }
     
     @Override
@@ -23,7 +29,10 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable{
             System.out.println("Socket connect "+addr+" - "+port);
             while(true){
                 Message msg=super.receiveMessage();
-                System.out.println(msg.getFullMessage());
+                //store message
+                
+                System.out.println("STORED "+msg.getVersion()+" "+msg.getSenderID()+" "+msg.getFileID()+" "+msg.getChunkNo()+" \r\n\r\n");
+                
             }
         }
     }

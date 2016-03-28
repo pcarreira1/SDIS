@@ -73,4 +73,35 @@ public class Message {
         System.arraycopy(body, 0, c, headerBytes.length, body.length);
         return c;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public int getSenderID() {
+        return senderID;
+    }
+
+    public String getFileID() {
+        return fileID;
+    }
+
+    public int getChunkNo() {
+        return chunkNo;
+    }
+
+    public int getReplicationDeg() {
+        return replicationDeg;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+    
+    
+    
 }

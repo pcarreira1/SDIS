@@ -34,6 +34,10 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
         Message msg = new Message(Message.MessageType.REMOVED, "1.0", serverID, FileID, ChunkNo);
         sendMessage(msg.getHeader());
     }
+    
+    public void joinSocket(){
+        super.join();
+    }
 
     @Override
     public void run() {
