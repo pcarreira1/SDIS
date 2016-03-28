@@ -7,10 +7,10 @@ public class Message {
     Message() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     //Available MessageTypes
-    public enum MessageType{
-        PUTCHUNK,STORED,GETCHUNK,CHUNK,DELETE,REMOVED
+    public enum MessageType {
+        PUTCHUNK, STORED, GETCHUNK, CHUNK, DELETE, REMOVED
     }
     private String type;
     //Version must follow the regex <n>'.'<m> where <n> and <m> are digits
@@ -33,6 +33,10 @@ public class Message {
         //header = ""+types[type]+' '+version+' '+senderID+' '+fileID+' '+chunkNo+' '+replicationDeg+' '+"\r\n\r\n";
         return header;
     }
+    
+    public byte[] getHeaderByte(){
+        return header.getBytes();
+    }
 
     public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo, int _replicationDeg) {
         this.type = _type.toString();
@@ -41,24 +45,32 @@ public class Message {
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
         this.replicationDeg = _replicationDeg;
-        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo+' '+replicationDeg+' '+"\r\n\r\n";
+        header = "" + type + ' ' + version + ' ' + senderID + ' ' + chunkNo + ' ' + replicationDeg + ' ' + "\r\n\r\n";
     }
-    
-     public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo) {
+
+    public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo) {
         this.type = _type.toString();
         this.version = _version;
         this.senderID = _senderID;
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
-        header = ""+ type + ' ' + version +' '+senderID+' '+chunkNo+' '+"\r\n\r\n";
+        header = "" + type + ' ' + version + ' ' + senderID + ' ' + chunkNo + ' ' + "\r\n\r\n";
     }
 
     public void setBody(byte[] body) {
         this.body = body;
     }
-        
-    public String getFullMessage(){
-        String bodyString = Arrays.toString(body);
-        return header+bodyString;
+
+//    public String getFullMessage() {
+//        String bodyString = Arrays.toString(body);
+//        return header + bodyString;
+//    }
+
+    public byte[] getFullMesageByte() {
+        byte[] headerBytes = header.getBytes();
+        byte[] c = new byte[headerBytes.length + body.length];
+        System.arraycopy(headerBytes, 0, c, 0, headerBytes.length);
+        System.arraycopy(body, 0, c, headerBytes.length, body.length);
+        return c;
     }
 }

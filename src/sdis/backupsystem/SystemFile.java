@@ -69,9 +69,9 @@ public class SystemFile implements Serializable {
     public byte[] cutDataForChunk(int ChunkNo) {
         byte[] information;
         if (ChunkNo != numChunks) {
-            information = Arrays.copyOfRange(data, (ChunkNo - 1) * 64000, (ChunkNo * 64000));
+            information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, (ChunkNo+1) * maxChunkSize);
         } else {
-            information = Arrays.copyOfRange(data, (ChunkNo - 1) * 64000, data.length);
+            information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, data.length);
         }
         return information;
     }
