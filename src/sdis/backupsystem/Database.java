@@ -54,7 +54,8 @@ public class Database implements Serializable {
     }
     
     public void addFile(SystemFile file){
-        myFiles.add(file);
+        if(!myFiles.contains(file))
+            myFiles.add(file);
     }
     
     public void deleteFile(String fileID){
@@ -67,7 +68,16 @@ public class Database implements Serializable {
     }
     
     public void addChunk(Chunk chunk){
-        backedUp.add(chunk);
+        if(!backedUp.contains(chunk))
+            backedUp.add(chunk);
+    }
+    
+     public void deleteChunk(Chunk chunk){
+        for(int i=0; i<backedUp.size();i++){
+            if(backedUp.get(i).getFileID().equals(chunk.getFileID())){
+                backedUp.remove(i);
+            }
+        }
     }
     
 
