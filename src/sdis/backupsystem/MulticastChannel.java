@@ -62,16 +62,18 @@ public class MulticastChannel {
                     type = Message.MessageType.valueOf(params[0]);
                     senderID = Integer.parseInt(params[2]);
                     chunk_no = Integer.parseInt(params[4]);
-                    message = new Message(type, params[1], senderID, params[0], chunk_no);
+                    message = new Message(type, params[1], senderID, params[3], chunk_no);
                     break;
                 case 6:
                     type = Message.MessageType.valueOf(params[0]);
                     senderID = Integer.parseInt(params[2]);
                     chunk_no = Integer.parseInt(params[4]);
                     replication = Integer.parseInt(params[5]);
-                    message = new Message(type, params[1], senderID, params[0], chunk_no);
+                    message = new Message(type, params[1], senderID, params[3], chunk_no);
                     break;
             }
+            message.setBody(received_message[1].getBytes());
+            
 
         } catch (UnsupportedEncodingException ex) {
             return null;

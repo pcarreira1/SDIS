@@ -1,10 +1,15 @@
 package sdis.backupsystem;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.MulticastSocket;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MulticastDataBackup extends MulticastChannel implements Runnable{
     
@@ -30,8 +35,15 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable{
             System.out.println("Socket connect "+addr+" - "+port);
             while(true){
                 Message msg=super.receiveMessage();
-                //store message
-                
+                try {
+                    //store message
+                    ArrayList<Chunk> chunks=new ArrayList<Chunk>();
+                    Database data=new Database();
+                    data.addChunk(new Chunk(msg.getFileID(),msg.getChunkNo(),msg.getBody()));
+                    data.saveDatabase();
+                } catch (Exception ex) {
+                    Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
+                } 
                 System.out.println("STORED "+msg.getVersion()+" "+msg.getSenderID()+" "+msg.getFileID()+" "+msg.getChunkNo());
                 
             }

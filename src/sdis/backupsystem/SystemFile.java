@@ -1,8 +1,12 @@
 package sdis.backupsystem;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +14,9 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static sun.security.krb5.Confounder.bytes;
 
 public class SystemFile implements Serializable {
 
@@ -69,7 +76,7 @@ public class SystemFile implements Serializable {
     public byte[] cutDataForChunk(int ChunkNo) {
         byte[] information;
         if (ChunkNo != numChunks) {
-            information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, (ChunkNo+1) * maxChunkSize);
+            information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, (ChunkNo + 1) * maxChunkSize);
         } else {
             information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, data.length);
         }

@@ -65,5 +65,10 @@ public class Database implements Serializable {
             }
         }
     }
+    
+    public void addChunk(Chunk chunk){
+        backedUp.add(chunk);
+    }
+    
 
 }
