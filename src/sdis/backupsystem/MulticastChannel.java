@@ -52,9 +52,11 @@ public class MulticastChannel {
         String received;
         try {
             received = new String(packet.getData(), packet.getOffset(), packet.getLength(), "UTF-8");
-            String params[] = received.split(" ");
+            
+            String received_message[] = received.split("\r\n\r\n");
             Message.MessageType type = null;
             int senderID, chunk_no, replication;
+            String params[] = received_message[0].split(" ");
             switch (params.length) {
                 case 5:
                     type = Message.MessageType.valueOf(params[0]);
@@ -77,8 +79,7 @@ public class MulticastChannel {
         return message;
     }
 
-    public boolean sendMessage(String buffer) {
-        byte[] bytes = buffer.getBytes();
+    public boolean sendMessage(byte[] bytes) {
         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, addr, port);
         try {
             socket.send(packet);

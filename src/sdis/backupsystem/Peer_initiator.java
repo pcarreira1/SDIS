@@ -43,7 +43,7 @@ public class Peer_initiator {
 
             SystemFile file=new SystemFile("C:\\Users\\carre\\Desktop\\logo.png");
             Chunk chunk;
-            for(int i=1;i<=file.getNumChunks();i++){
+            for(int i=0;i<file.getNumChunks();i++){
                 chunk=new Chunk(file.getFileID(), i, file.cutDataForChunk(i));
                 MDB.BackupRequest(serverID,file.getFileID(),file.getNumChunks(),3,chunk);
             }

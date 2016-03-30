@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.MulticastSocket;
+import java.nio.charset.StandardCharsets;
 
 public class MulticastDataBackup extends MulticastChannel implements Runnable{
     
@@ -15,7 +16,7 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable{
          if (super.join()) {
             Message msg = new Message(Message.MessageType.PUTCHUNK, "1.0", serverID, FileID, ChunkNo, ReplicationDeg);
             msg.setBody(chunkPiece.getInformation());
-            sendMessage(msg.getFullMessage());
+            sendMessage(msg.getFullMesageByte());
         }
     }
     
@@ -31,7 +32,7 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable{
                 Message msg=super.receiveMessage();
                 //store message
                 
-                System.out.println("STORED "+msg.getVersion()+" "+msg.getSenderID()+" "+msg.getFileID()+" "+msg.getChunkNo()+" \r\n\r\n");
+                System.out.println("STORED "+msg.getVersion()+" "+msg.getSenderID()+" "+msg.getFileID()+" "+msg.getChunkNo());
                 
             }
         }

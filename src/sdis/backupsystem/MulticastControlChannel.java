@@ -15,24 +15,24 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
     //needs arguments
     public void BackupReply(int serverID, String FileID, int ChunkNo) {
         Message msg = new Message(Message.MessageType.STORED, "1.0", serverID, FileID, ChunkNo);
-        sendMessage(msg.getHeader());
+        sendMessage(msg.getHeader().getBytes());
     }
 
     //needs arguments
     public void RestoreReply(int serverID, String FileID, int ChunkNo) {
         Message msg = new Message(Message.MessageType.GETCHUNK, "1.0", serverID, FileID, ChunkNo);
-        sendMessage(msg.getHeader());
+        sendMessage(msg.getHeader().getBytes());
     }
 
     //needs arguments
     public void Delete(int serverID, String FileID, int ChunkNo) {
         Message msg = new Message(Message.MessageType.DELETE, "1.0", serverID, FileID, ChunkNo);
-        sendMessage(msg.getHeader());
+        sendMessage(msg.getHeader().getBytes());
     }
 
     public void SpaceReclaim(int serverID, String FileID, int ChunkNo) {
         Message msg = new Message(Message.MessageType.REMOVED, "1.0", serverID, FileID, ChunkNo);
-        sendMessage(msg.getHeader());
+        sendMessage(msg.getHeader().getBytes());
     }
     
     public void joinSocket(){
@@ -45,7 +45,7 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
             System.out.println("Socket connect "+addr+" - "+port);
             while(true){
                 Message msg=super.receiveMessage();
-                System.out.println(msg.getFullMessage());
+                System.out.println(msg.getFullMesageByte());
             }
         }
     }
