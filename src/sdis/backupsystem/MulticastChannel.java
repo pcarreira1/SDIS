@@ -52,7 +52,7 @@ public class MulticastChannel {
         String received;
         try {
             received = new String(packet.getData(), packet.getOffset(), packet.getLength(), "UTF-8");
-            
+
             String received_message[] = received.split("\r\n\r\n");
             Message.MessageType type = null;
             int senderID, chunk_no, replication;
@@ -73,7 +73,6 @@ public class MulticastChannel {
                     break;
             }
             message.setBody(received_message[1].getBytes());
-            
 
         } catch (UnsupportedEncodingException ex) {
             return null;

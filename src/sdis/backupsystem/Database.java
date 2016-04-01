@@ -48,7 +48,7 @@ public class Database implements Serializable {
         ObjectInputStream objectinputstream = new ObjectInputStream(streamIn);
         Database temp = (Database) objectinputstream.readObject();
         myFiles = temp.getMyFiles();
-        backedUp = getBackedUp();
+        backedUp = temp.getBackedUp();
         objectinputstream.close();
         streamIn.close();
     }

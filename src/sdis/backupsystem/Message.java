@@ -33,8 +33,8 @@ public class Message {
         //header = ""+types[type]+' '+version+' '+senderID+' '+fileID+' '+chunkNo+' '+replicationDeg+' '+"\r\n\r\n";
         return header;
     }
-    
-    public byte[] getHeaderByte(){
+
+    public byte[] getHeaderByte() {
         return header.getBytes();
     }
 
@@ -45,7 +45,7 @@ public class Message {
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
         this.replicationDeg = _replicationDeg;
-        header = "" + type + ' ' + version + ' ' + senderID + ' ' + chunkNo + ' ' + replicationDeg + ' ' + "\r\n\r\n";
+        header = "" + type + ' ' + version + ' ' + senderID + ' ' + fileID + ' ' + chunkNo + ' ' + replicationDeg + ' ' + "\r\n\r\n";
     }
 
     public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo) {
@@ -54,7 +54,7 @@ public class Message {
         this.senderID = _senderID;
         this.fileID = _fileID;
         this.chunkNo = _chunkNo;
-        header = "" + type + ' ' + version + ' ' + senderID + ' ' + chunkNo + ' ' + "\r\n\r\n";
+        header = "" + type + ' ' + version + ' ' + senderID + ' ' + fileID + ' ' + chunkNo + ' ' + "\r\n\r\n";
     }
 
     public void setBody(byte[] body) {
@@ -65,7 +65,6 @@ public class Message {
 //        String bodyString = Arrays.toString(body);
 //        return header + bodyString;
 //    }
-
     public byte[] getFullMesageByte() {
         byte[] headerBytes = header.getBytes();
         byte[] c = new byte[headerBytes.length + body.length];
@@ -101,7 +100,5 @@ public class Message {
     public byte[] getBody() {
         return body;
     }
-    
-    
-    
+
 }
