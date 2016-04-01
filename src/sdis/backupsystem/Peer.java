@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Peer {
-
+public class Peer extends PeerBase{
     //INIT ------------------- SERVER_ID     IP     PORT    IP     PORT    IP     PORT
     //java -jar SDIS-BackupSystem.jar 100 localhost 8889 localhost 8888 localhost 8887
     public static void main(String[] args) {
@@ -20,12 +19,12 @@ public class Peer {
         args[5]="224.0.0.3";
         args[6]="8887";
         ////////////////////////////////
-        
+        peer_id=Integer.parseInt(args[0]);
         try {
             //Socket Objects
             MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]));
-            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]));
-            MulticastControlChannel MDR = new MulticastControlChannel(args[5], Integer.parseInt(args[6]));
+            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]),MC);
+            MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]),MC);
 
             //Init all threads
             Thread MC_Thread = new Thread(MC);

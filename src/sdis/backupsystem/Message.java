@@ -56,6 +56,15 @@ public class Message {
         this.chunkNo = _chunkNo;
         header = "" + type + ' ' + version + ' ' + senderID + ' ' + fileID + ' ' + chunkNo + ' ' + "\r\n\r\n";
     }
+    
+    public Message(MessageType _type, String _version, int _senderID, String _fileID) {
+        this.type = _type.toString();
+        this.version = _version;
+        this.senderID = _senderID;
+        this.fileID = _fileID;
+        this.chunkNo=-1;
+        header = "" + type + ' ' + version + ' ' + senderID + ' ' + fileID + ' ' + "\r\n\r\n";
+    }
 
     public void setBody(byte[] body) {
         this.body = body;

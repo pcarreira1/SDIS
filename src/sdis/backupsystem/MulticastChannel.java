@@ -39,7 +39,7 @@ public class MulticastChannel {
         return true;
     }
 
-    public Message receiveMessage() {
+    public String receiveMessage() {
         byte[] buffer = new byte[PACKETSIZE];
         DatagramPacket packet = new DatagramPacket(buffer, PACKETSIZE);
 
@@ -53,31 +53,10 @@ public class MulticastChannel {
         try {
             received = new String(packet.getData(), packet.getOffset(), packet.getLength(), "UTF-8");
 
-            String received_message[] = received.split("\r\n\r\n");
-            Message.MessageType type = null;
-            int senderID, chunk_no, replication;
-            String params[] = received_message[0].split(" ");
-            switch (params.length) {
-                case 5:
-                    type = Message.MessageType.valueOf(params[0]);
-                    senderID = Integer.parseInt(params[2]);
-                    chunk_no = Integer.parseInt(params[4]);
-                    message = new Message(type, params[1], senderID, params[3], chunk_no);
-                    break;
-                case 6:
-                    type = Message.MessageType.valueOf(params[0]);
-                    senderID = Integer.parseInt(params[2]);
-                    chunk_no = Integer.parseInt(params[4]);
-                    replication = Integer.parseInt(params[5]);
-                    message = new Message(type, params[1], senderID, params[3], chunk_no);
-                    break;
-            }
-            message.setBody(received_message[1].getBytes());
-
         } catch (UnsupportedEncodingException ex) {
             return null;
         }
-        return message;
+        return received;
     }
 
     public boolean sendMessage(byte[] bytes) {

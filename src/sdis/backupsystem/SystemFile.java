@@ -35,14 +35,16 @@ public class SystemFile implements Serializable {
 
     File file;
 
-    public SystemFile(String _path) throws IOException, NoSuchAlgorithmException {
+    public SystemFile(String _path, boolean loadAll) throws IOException, NoSuchAlgorithmException {
         Path path = Paths.get(_path);
         file = new File(_path);
+        fileID = generateFileID(file.getName());
         float fileSize = file.length();
         float nChunks = fileSize / maxChunkSize;
         numChunks = (int) Math.ceil(nChunks);
-        data = Files.readAllBytes(path);
-        fileID = generateFileID(file.getName());
+        if (loadAll) {
+            data = Files.readAllBytes(path);
+        }
     }
 
     public String getFileID() {
