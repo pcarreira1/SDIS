@@ -25,7 +25,7 @@ public class Peer_initiator extends PeerBase {
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
         //for test /////////////////////
-        args = new String[7];
+        args = new String[10];
         args[0] = "102";
         args[1] = "224.0.0.3";
         args[2] = "8889";
@@ -33,6 +33,9 @@ public class Peer_initiator extends PeerBase {
         args[4] = "8888";
         args[5] = "224.0.0.3";
         args[6] = "8887";
+        args[7] = "BACKUP";
+        args[8] = "C:\\Users\\carre\\Desktop\\carnaval 2.jpg";
+        args[9] = "1";
         ////////////////////////////////
 
         peer_id = Integer.parseInt(args[0]);
@@ -60,12 +63,23 @@ public class Peer_initiator extends PeerBase {
             Thread MDR_Thread = new Thread(MDR);
             MDR_Thread.start();
 
-            //backupFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDB);
+            switch(args[7]){
+                case "BACKUP":
+                    backupFile(args[8],MC,MDB,Integer.parseInt(args[9]));
+                    break;
+                case "RESTORE":
+                    restoreFile(args[8],MC,MDR);
+                    break;
+                case "DELETE":
+                    deleteFile(args[8],MC);
+                    break;
+            }
+            //backupFile("C:\\Users\\carre\\Desktop\\carnaval 2.jpg",MC,MDB);
             //deleteFile("C:\\Users\\carre\\Desktop\\logo.png",MC);
-            //restoreFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDR);
-            backupFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC, MDB);
+            //restoreFile("C:\\Users\\carre\\Desktop\\carnaval 2.jpg",MC,MDR);
+            //backupFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC, MDB);
             //restoreFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf", MC, MDR);
-            deleteFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC);
+            //deleteFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC);
             int a = 0;
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
@@ -93,7 +107,11 @@ public class Peer_initiator extends PeerBase {
             for (int i = 0; i < file.getNumChunks(); i++) {
                 MDR.count_reply = 0;
                 MC.RestoreRequest(peer_id, file.getFileID(), i);
-
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+                }
 //                if (MDR.count_reply > 0) {
 //                    break;
 //                }
@@ -109,7 +127,7 @@ public class Peer_initiator extends PeerBase {
             oos.close();
             fout.close();*/
             byte[] dataForRestoredFile = temp.getData();
-            FileOutputStream out = new FileOutputStream("diablo_pitch.pdf");
+            FileOutputStream out = new FileOutputStream("imagem.jpg");
             out.write(dataForRestoredFile);
             out.close();
         } catch (IOException ex) {
@@ -119,7 +137,7 @@ public class Peer_initiator extends PeerBase {
         }
     }
 
-    public static void backupFile(String filePath, MulticastControlChannel MC, MulticastDataBackup MDB) {
+    public static void backupFile(String filePath, MulticastControlChannel MC, MulticastDataBackup MDB,int replication) {
         SystemFile file = null;
         try {
             file = new SystemFile(filePath, true);
@@ -129,7 +147,6 @@ public class Peer_initiator extends PeerBase {
             Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
         }
         Chunk chunk;
-        int replication = 1;
         for (int i = 0; i < file.getNumChunks(); i++) {
             int timeout = 1000;
             for (int j = 0; j < 5; j++) {
