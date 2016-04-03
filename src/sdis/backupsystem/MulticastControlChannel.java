@@ -69,6 +69,7 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
                             Chunk chun = temp.get(i);
                             temp.remove(i);
                             data.saveDatabase();
+                            i--;
                             SpaceReclaim(peer_id, chun.getFileID(), chun.getChunkNo());
                         }
                     }

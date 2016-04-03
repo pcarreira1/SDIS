@@ -63,8 +63,10 @@ public class Peer_initiator extends PeerBase {
             //backupFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDB);
             //deleteFile("C:\\Users\\carre\\Desktop\\logo.png",MC);
             //restoreFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDR);
-            //backupFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf", MC, MDB);
-            restoreFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf", MC, MDR);
+            backupFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC, MDB);
+            //restoreFile("C:\\Users\\Ghost\\Desktop\\diablo_pitch.pdf", MC, MDR);
+            deleteFile("C:\\Users\\Ghost\\Desktop\\beach.jpg", MC);
+            int a = 0;
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
         }

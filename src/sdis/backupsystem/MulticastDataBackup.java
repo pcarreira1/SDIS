@@ -145,7 +145,7 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable {
                     Random rand = new Random();
                     int max = 400;
                     int min = 0;
-                    Thread.sleep(rand.nextInt((max - min) + 1) + max);
+                    Thread.sleep(rand.nextInt((max - min) + 1));
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
                 }
