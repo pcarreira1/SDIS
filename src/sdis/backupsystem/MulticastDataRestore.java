@@ -24,6 +24,11 @@ public class MulticastDataRestore extends MulticastChannel implements Runnable {
 
     public void SendChunk(int serverID, String FileID, int ChunkNo, Chunk chunkPiece) {
         Message msg = new Message(Message.MessageType.CHUNK, "1.0", serverID, FileID, ChunkNo);
+        try {
+            System.out.println(msg.getHeaderByte().length);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(MulticastDataRestore.class.getName()).log(Level.SEVERE, null, ex);
+        }
         msg.setBody(chunkPiece.getInformation());
         sendMessage(msg.getFullMesageByte());
     }
@@ -48,13 +53,25 @@ public class MulticastDataRestore extends MulticastChannel implements Runnable {
 
     public Message decryptMessage(byte[] received) throws UnsupportedEncodingException {
         Message finalMsg = null;
-        byte[] header = new byte[85];
-        System.arraycopy(received, 0, header, 0, header.length);
-        byte[] body = Arrays.copyOfRange(received, header.length, received.length);
-        String headerString = new String(header, "UTF-8");
+//        byte[] header = new byte[85];
+//        System.arraycopy(received, 0, header, 0, header.length);
+//        byte[] body = Arrays.copyOfRange(received, header.length, received.length);
+//        String headerString = new String(header, "UTF-8");
+        String test = new String(received, "UTF-8");
+        String testRN = "\r\n\r\n";
+        String test1[] = test.split("\r\n\r\n");
+        String testTotHead= test1[0]+testRN;
+        System.out.println(test1[0]);
+        byte[] temp = testTotHead.getBytes("UTF-8");
+        byte[] body = null;
+        int leng = temp.length;
+        if(leng>85){
+            leng = 85 + (leng-85)*2;
+        }
+        body = Arrays.copyOfRange(received, leng, received.length);
         Message.MessageType type = null;
         int senderID, chunk_no, replication;
-        String params[] = headerString.split(" ");
+        String params[] = test1[0].split(" ");
         switch (params.length) {
             case 5:
                 type = Message.MessageType.valueOf(params[0]);
@@ -87,7 +104,7 @@ public class MulticastDataRestore extends MulticastChannel implements Runnable {
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(new String(msg.getFullMesageByte(), StandardCharsets.UTF_8));
+            //System.out.println(new String(msg.getFullMesageByte(), StandardCharsets.UTF_8));
             currentChunk = new Chunk(msg.getFileID(), msg.getChunkNo(), msg.getBody());
             count_reply++;
         }

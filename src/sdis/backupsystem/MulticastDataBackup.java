@@ -37,15 +37,8 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable {
             long freeSpace = new File("/").getFreeSpace() / 1024;
             if (freeSpace < 64) {
                 //Database data = new Database();
-                try {
-                    data.loadDatabase();
-                    Chunk temp = data.backedUp.get(0);
-                    mc.SpaceReclaim(peer_id, temp.getFileID(), temp.getChunkNo());
-                } catch (IOException ex) {
-                    Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Chunk temp = data.backedUp.get(0);
+                mc.SpaceReclaim(peer_id, temp.getFileID(), temp.getChunkNo());
             }
             Message msg = new Message(Message.MessageType.PUTCHUNK, "1.0", serverID, FileID, ChunkNo, ReplicationDeg);
             msg.setBody(chunkPiece.getInformation());
@@ -144,7 +137,6 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable {
                     //                    }
                     data.addChunk(new Chunk(msg.getFileID(), msg.getChunkNo(), msg.getBody()));
                     data.saveDatabase();
-                    System.out.println("Chunks in database: " + data.getBackedUp().size());
                 } catch (Exception ex) {
                     Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
                 }
