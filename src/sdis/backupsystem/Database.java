@@ -35,7 +35,7 @@ public class Database implements Serializable {
     }
 
     public void saveDatabase() throws FileNotFoundException, IOException {
-        FileOutputStream fout = new FileOutputStream("databaseTestRestore");
+        FileOutputStream fout = new FileOutputStream("databaseTestRestore2");
         ObjectOutputStream oos = new ObjectOutputStream(fout);
         Database temp = new Database(myFiles, backedUp);
         oos.writeObject(temp);
@@ -44,7 +44,7 @@ public class Database implements Serializable {
     }
 
     public void loadDatabase() throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream streamIn = new FileInputStream("databaseTestRestore");
+        FileInputStream streamIn = new FileInputStream("databaseTestRestore2");
         ObjectInputStream objectinputstream = new ObjectInputStream(streamIn);
         Database temp = (Database) objectinputstream.readObject();
         myFiles = temp.getMyFiles();
@@ -69,13 +69,18 @@ public class Database implements Serializable {
     
     public void addChunk(Chunk chunk){
         //if(!backedUp.contains(chunk))
+        boolean exists = false;
         for(int i=0; i<backedUp.size(); i++)
         {
-            if(!(backedUp.get(i).getFileID().equals(chunk.getFileID()) && backedUp.get(i).getChunkNo() == chunk.getChunkNo())){
-                backedUp.add(chunk);
+            if(backedUp.get(i).getFileID().equals(chunk.getFileID()) && backedUp.get(i).getChunkNo() == chunk.getChunkNo()){
+                //backedUp.add(chunk);
+                exists = true;
             }
         }
-        if(0 == backedUp.size()){
+//        if(0 == backedUp.size()){
+//            backedUp.add(chunk);
+//        }
+        if(!exists){
             backedUp.add(chunk);
         }
     }

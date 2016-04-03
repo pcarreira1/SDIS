@@ -144,6 +144,7 @@ public class MulticastDataBackup extends MulticastChannel implements Runnable {
                     //                    }
                     data.addChunk(new Chunk(msg.getFileID(), msg.getChunkNo(), msg.getBody()));
                     data.saveDatabase();
+                    System.out.println("Chunks in database: " + data.getBackedUp().size());
                 } catch (Exception ex) {
                     Logger.getLogger(MulticastDataBackup.class.getName()).log(Level.SEVERE, null, ex);
                 }
