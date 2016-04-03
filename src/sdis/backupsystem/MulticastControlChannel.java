@@ -10,8 +10,15 @@ import static sdis.backupsystem.PeerBase.peer_id;
 
 public class MulticastControlChannel extends MulticastChannel implements Runnable {
 
+    private MulticastDataRestore mdr;
+
     public MulticastControlChannel(String addr, int port) throws IOException {
         super(addr, port);
+    }
+
+    public MulticastControlChannel(String addr, int port, MulticastDataRestore mdr) throws IOException {
+        super(addr, port);
+        this.mdr = mdr;
     }
 
     //needs arguments
@@ -36,12 +43,12 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
         Message msg = new Message(Message.MessageType.REMOVED, "1.0", serverID, FileID, ChunkNo);
         sendMessage(msg.getHeader().getBytes());
     }
-    
-    public void joinSocket(){
+
+    public void joinSocket() {
         super.join();
     }
-    
-    public Message decryptMessage(String received) { 
+
+    public Message decryptMessage(String received) {
         Message finalMsg = null;
         String received_message[] = received.split("\r\n\r\n");
         Message.MessageType type = null;
@@ -52,14 +59,14 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
                 type = Message.MessageType.valueOf(params[0]);
                 senderID = Integer.parseInt(params[2]);
                 finalMsg = new Message(type, params[1], senderID, params[3]);
-                
-                Database data=new Database();
+
+                Database data = new Database();
                 try {
                     data.loadDatabase();
-                    ArrayList<Chunk> temp=data.backedUp;
+                    ArrayList<Chunk> temp = data.backedUp;
                     for (int i = 0; i < temp.size(); i++) {
-                        if(temp.get(i).getFileID().equals(finalMsg.getFileID())){
-                            Chunk chun=temp.get(i);
+                        if (temp.get(i).getFileID().equals(finalMsg.getFileID())) {
+                            Chunk chun = temp.get(i);
                             temp.remove(i);
                             data.saveDatabase();
                             SpaceReclaim(peer_id, chun.getFileID(), chun.getChunkNo());
@@ -81,15 +88,32 @@ public class MulticastControlChannel extends MulticastChannel implements Runnabl
         return finalMsg;
     }
 
-    public int count_reply=0;
+    public int count_reply = 0;
+
     @Override
     public void run() {
         if (super.join()) {
-            System.out.println("Socket connect "+addr+" - "+port);
-            while(true){
+            System.out.println("Socket connect " + addr + " - " + port);
+            while (true) {
                 String msg_received = super.receiveMessage();
-                Message msg=decryptMessage(msg_received);
-                System.out.println(msg.getHeader());  
+                Message msg = decryptMessage(msg_received);
+                System.out.println(msg.getHeader());
+                if (msg.getType().equals("GETCHUNK") && msg.getSenderID() != peer_id) {
+                    Database temp = new Database();
+                    try {
+                        temp.loadDatabase();
+                        for(int i =0; i<temp.getBackedUp().size(); i++){
+                            if(temp.getBackedUp().get(i).getFileID().equals(msg.getFileID()) && temp.getBackedUp().get(i).getChunkNo() == msg.getChunkNo()){
+                                mdr.SendChunk(peer_id, msg.getFileID(), msg.getChunkNo(), temp.getBackedUp().get(i));
+                            }
+                        }
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(MulticastControlChannel.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(MulticastControlChannel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 count_reply++;
             }
         }

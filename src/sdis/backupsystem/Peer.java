@@ -1,5 +1,6 @@
 package sdis.backupsystem;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +23,22 @@ public class Peer extends PeerBase{
         peer_id=Integer.parseInt(args[0]);
         try {
             //Socket Objects
-            MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]));
-            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]),MC);
-            MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]),MC);
+            
+            Database database = new Database();
+            try {
+                database.loadDatabase();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]));
+            MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]));
+            MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]),MDR);
+            //MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]),MC);
+            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]),MC,database);
+            //MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]),MC);
+            
 
             //Init all threads
             Thread MC_Thread = new Thread(MC);

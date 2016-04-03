@@ -1,5 +1,6 @@
 package sdis.backupsystem;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class Message {
@@ -34,8 +35,8 @@ public class Message {
         return header;
     }
 
-    public byte[] getHeaderByte() {
-        return header.getBytes();
+    public byte[] getHeaderByte() throws UnsupportedEncodingException {
+        return header.getBytes("UTF-8");
     }
 
     public Message(MessageType _type, String _version, int _senderID, String _fileID, int _chunkNo, int _replicationDeg) {

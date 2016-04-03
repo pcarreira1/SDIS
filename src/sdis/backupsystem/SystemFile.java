@@ -1,6 +1,7 @@
 package sdis.backupsystem;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +49,17 @@ public class SystemFile implements Serializable {
         }
     }
 
+    public SystemFile(ArrayList<Chunk> chunks) throws IOException {
+        fileID = chunks.get(0).getFileID();
+        byte[] temp;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        for (int i = 0; i < chunks.size(); i++) {
+            outputStream.write(chunks.get(i).getInformation());
+        }
+        temp = outputStream.toByteArray();
+        data = temp;
+    }
+
     public String getFileID() {
         return fileID;
     }
@@ -77,7 +90,7 @@ public class SystemFile implements Serializable {
 
     public byte[] cutDataForChunk(int ChunkNo) {
         byte[] information;
-        if (ChunkNo != numChunks) {
+        if ((ChunkNo+1) != numChunks) {
             information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, (ChunkNo + 1) * maxChunkSize);
         } else {
             information = Arrays.copyOfRange(data, ChunkNo * maxChunkSize, data.length);

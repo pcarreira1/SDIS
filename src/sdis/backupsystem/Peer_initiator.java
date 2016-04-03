@@ -5,7 +5,10 @@
  */
 package sdis.backupsystem;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -35,47 +38,44 @@ public class Peer_initiator extends PeerBase {
         peer_id = Integer.parseInt(args[0]);
         try {
             //Socket Objects
-            MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]));
-            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]), MC);
-            MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]), MC);
+
+            Database database = new Database();
+            try {
+                database.loadDatabase();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]));
+            MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]));
+            MulticastControlChannel MC = new MulticastControlChannel(args[1], Integer.parseInt(args[2]), MDR);
+            //MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]), MC);
+            MulticastDataBackup MDB = new MulticastDataBackup(args[3], Integer.parseInt(args[4]), MC, database);
+            //MulticastDataRestore MDR = new MulticastDataRestore(args[5], Integer.parseInt(args[6]), MC);
 
             Thread MC_Thread = new Thread(MC);
             MC_Thread.start();
 
-            backupFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDB);
-            deleteFile("C:\\Users\\carre\\Desktop\\logo.png",MC);
+            Thread MDR_Thread = new Thread(MDR);
+            MDR_Thread.start();
+
+            //backupFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDB);
+            //deleteFile("C:\\Users\\carre\\Desktop\\logo.png",MC);
             //restoreFile("C:\\Users\\carre\\Desktop\\logo.png",MC,MDR);
-            
+            //backupFile("C:\\Users\\Ghost\\Desktop\\go.gif", MC, MDB);
+            restoreFile("C:\\Users\\Ghost\\Desktop\\go.gif", MC, MDR);
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
+
     public static void deleteFile(String filePath, MulticastControlChannel MC) {
-        SystemFile file=null;
+        SystemFile file = null;
         try {
-            file = new SystemFile(filePath,false);
-            MC.Delete(peer_id,file.getFileID());
-        } catch (IOException ex) {
-            Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static void restoreFile(String filePath, MulticastControlChannel MC,MulticastDataRestore MDR) {
-        SystemFile file=null;
-        try {
-            file = new SystemFile(filePath,false);
-            for (int i = 0; i < file.getNumChunks(); i++) {
-                MDR.count_reply = 0;
-                MC.RestoreRequest(peer_id,file.getFileID(),i);
-                
-                if (MDR.count_reply > 0) {
-                    break;
-                }
-            }
+            file = new SystemFile(filePath, false);
+            MC.Delete(peer_id, file.getFileID());
         } catch (IOException ex) {
             Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -83,10 +83,44 @@ public class Peer_initiator extends PeerBase {
         }
     }
 
-    public static void backupFile(String filePath, MulticastControlChannel MC,MulticastDataBackup MDB) {
+    public static void restoreFile(String filePath, MulticastControlChannel MC, MulticastDataRestore MDR) {
         SystemFile file = null;
         try {
-            file = new SystemFile(filePath,true);
+            file = new SystemFile(filePath, false);
+            ArrayList<Chunk> chunksRetrieved = new ArrayList<>();
+            for (int i = 0; i < file.getNumChunks(); i++) {
+                MDR.count_reply = 0;
+                MC.RestoreRequest(peer_id, file.getFileID(), i);
+
+//                if (MDR.count_reply > 0) {
+//                    break;
+//                }
+                while (MDR.count_reply <= 0) {
+
+                }
+                chunksRetrieved.add(MDR.currentChunk);
+            }
+            SystemFile temp = new SystemFile(chunksRetrieved);
+            /*FileOutputStream fout = new FileOutputStream("go.gif");
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(temp);
+            oos.close();
+            fout.close();*/
+            byte[] dataForRestoredFile = temp.getData();
+            FileOutputStream out = new FileOutputStream("go.gif");
+            out.write(dataForRestoredFile);
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void backupFile(String filePath, MulticastControlChannel MC, MulticastDataBackup MDB) {
+        SystemFile file = null;
+        try {
+            file = new SystemFile(filePath, true);
         } catch (IOException ex) {
             Logger.getLogger(Peer_initiator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {

@@ -58,6 +58,20 @@ public class MulticastChannel {
         }
         return received;
     }
+    
+    public byte[] receiveMessageBytes(){
+        byte[] buffer = new byte[PACKETSIZE];
+        DatagramPacket packet = new DatagramPacket(buffer, PACKETSIZE);
+
+        try {
+            socket.receive(packet);
+        } catch (IOException e) {
+            System.err.println("Failed to receive message");
+        }
+        byte[] finalBytes = new byte[packet.getLength()];
+        System.arraycopy(packet.getData(), packet.getOffset(), finalBytes, 0, packet.getLength());
+        return finalBytes;
+    }
 
     public boolean sendMessage(byte[] bytes) {
         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, addr, port);
