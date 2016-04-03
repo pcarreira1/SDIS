@@ -11,14 +11,14 @@ public class Peer extends PeerBase{
     public static void main(String[] args) {
         
         //for test /////////////////////
-        args=new String[7];
+        /*args=new String[7];
         args[0]="101";
         args[1]="224.0.0.3";
         args[2]="8889";
         args[3]="224.0.0.3";
         args[4]="8888";
         args[5]="224.0.0.3";
-        args[6]="8887";
+        args[6]="8887";*/
         ////////////////////////////////
         peer_id=Integer.parseInt(args[0]);
         try {

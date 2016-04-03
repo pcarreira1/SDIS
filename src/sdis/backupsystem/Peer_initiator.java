@@ -25,7 +25,7 @@ public class Peer_initiator extends PeerBase {
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
         //for test /////////////////////
-        args = new String[10];
+        /*args = new String[10];
         args[0] = "102";
         args[1] = "224.0.0.3";
         args[2] = "8889";
@@ -35,7 +35,7 @@ public class Peer_initiator extends PeerBase {
         args[6] = "8887";
         args[7] = "BACKUP";
         args[8] = "C:\\Users\\carre\\Desktop\\carnaval 2.jpg";
-        args[9] = "1";
+        args[9] = "1";*/
         ////////////////////////////////
 
         peer_id = Integer.parseInt(args[0]);
